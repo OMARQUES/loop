@@ -99,7 +99,8 @@ const Form = () => {
         />
         {errors.password?.message && <small className="block text-red-600 w-full">{errors.password.message}</small>}
       </fieldset>
-      <div className={`flex flex-col justify-center w-full items-center px-2`}>
+
+      <div className="flex flex-col justify-center w-full items-center px-2">
         <button
           type="submit"
           disabled={isSubmitting}
