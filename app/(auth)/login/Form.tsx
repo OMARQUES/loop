@@ -1,5 +1,5 @@
 "use client";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./Form.module.css";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
@@ -17,6 +17,7 @@ type Inputs = {
 
 const Form = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const {
     register,
@@ -29,9 +30,12 @@ const Form = () => {
     },
   });
 
-  if (searchParams.get("error") === "OAuthAccountNotLinked") {
-    toast.error("Email já cadastrado");
-  }
+  useEffect(() => {
+    if (searchParams.get("error") === "OAuthAccountNotLinked") {
+      toast.error("Email já está vinculado a outra conta");
+      router.push("/login");
+    }
+  }, []);
 
   const formSubmit: SubmitHandler<Inputs> = async (form) => {
     const { email, password } = form;
