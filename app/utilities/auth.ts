@@ -7,6 +7,8 @@ import dbConnect from "./dbConnect";
 import clientPromise from "./clientPromise";
 import bcrypt from "bcryptjs";
 import User from "../models/User";
+import Accounts from "../models/Accounts";
+import { ObjectId } from "mongodb";
 
 export const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
@@ -42,16 +44,23 @@ export const authOptions: NextAuthOptions = {
           const user = await User.findOne({ email: credentials.email });
 
           if (user) {
-            const isMatch = await bcrypt.compare(credentials.password, user.password);
-            if (isMatch) {
-              return user;
+            const accounts = await Accounts.findOne({ userId: user._id });
+            if (accounts) {
+              throw new Error("Email em uso");
             } else {
-              throw new Error("Email ou senha incorretos");
+              const isMatch = await bcrypt.compare(credentials.password, user.password);
+              if (isMatch) {
+                return user;
+              } else {
+                throw new Error("Email ou senha incorretos");
+              }
             }
           } else {
             throw new Error("Usuario não encontrado");
           }
         } catch (err: any) {
+          console.log(err);
+
           throw new Error(err);
         }
       },
