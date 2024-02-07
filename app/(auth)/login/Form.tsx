@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import styles from "./Form.module.css";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
@@ -8,6 +7,8 @@ import { BsArrowRightCircleFill } from "react-icons/bs";
 import { useForm, SubmitHandler } from "react-hook-form";
 import GoogleButton from "../GoogleButton";
 import Loader from "../loading";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 type Inputs = {
   email: string;
@@ -15,9 +16,7 @@ type Inputs = {
 };
 
 const Form = () => {
-  const params = useSearchParams()!;
-  const session = useSession();
-  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const {
     register,
@@ -30,27 +29,21 @@ const Form = () => {
     },
   });
 
-  const [error, setError] = useState<string | null>("");
-
-  useEffect(() => {
-    setError(params.get("error"));
-  }, [params]);
-
-  console.log(error);
-  if (error === "OAuthAccountNotLinked") {
-    setError("Email já cadastrado");
+  if (searchParams.get("error") === "OAuthAccountNotLinked") {
+    toast.error("Email já cadastrado");
   }
 
-  if (session.status === "authenticated") {
-    router?.push("/home");
-  }
-
-  const formSubmit: SubmitHandler<Inputs> = (form) => {
+  const formSubmit: SubmitHandler<Inputs> = async (form) => {
     const { email, password } = form;
-    signIn("credentials", {
+    const res = await signIn("credentials", {
       email,
       password,
+      redirect: false,
     });
+
+    console.log(res?.error);
+
+    toast.error(JSON.stringify(res?.error, Object.getOwnPropertyNames(res?.error)));
   };
 
   return (
@@ -68,6 +61,7 @@ const Form = () => {
         </label>
         <input
           type="email"
+          placeholder="email@exemplo.com"
           {...register("email", {
             required: "Preecnha o email",
             pattern: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
@@ -82,6 +76,7 @@ const Form = () => {
         </label>
         <input
           type="password"
+          placeholder="***********"
           {...register("password", {
             required: "Preecha a senha",
           })}
@@ -91,18 +86,20 @@ const Form = () => {
       </fieldset>
       <div className={`flex flex-col justify-center w-full items-center px-2`}>
         <button type="submit" disabled={isSubmitting} className="w-full flex justify-center items-center">
-          <span className="text-center flex-1   mt-6 bg-green-700 hover:bg-lightColor hover:font-semibold rounded-md p-[1rem] px-4  text-white cursor-pointer">
+          <span
+            className="text-center flex-1   mt-6 bg-green-700 text-white cursor-pointer rounded-md p-[1rem] px-4  
+                       transition ease-in-out delay-150 hover:scale-105"
+          >
             Entrar
           </span>
         </button>
-        <p className={`py-6  text-[#707a8a] text-center ${styles.login_continue}`}>
-          <span className="mr-1 "> Or</span>
+        <p className={`py-6  text-slate-400 text-center ${styles.login_continue}`}>
+          <span className="mr-1 ">Ou</span>
         </p>
       </div>
       <div className="flex w-full justify-center px-2 text-lg items-center">
         <GoogleButton />
       </div>
-      {error && <small className="block w-full px-2 text-red-600">{error}</small>}
 
       <div className="py-4 px-2 w-full">
         <p>

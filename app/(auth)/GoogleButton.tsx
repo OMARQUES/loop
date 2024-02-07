@@ -15,9 +15,10 @@ const GoogleButton = () => {
   return (
     <p
       onClick={() => signIn("google", { callbackUrl })}
-      className=" flex items-center justify-between pl-4 flex-1   cursor-pointer hover:bg-[#F5F5F5] hover:font-medium  bg-[#EAECEF] py-4 my-4 rounded-lg text-center"
+      className=" flex items-center justify-between pl-4 flex-1 cursor-pointer py-2 my-4 rounded-lg text-center bg-slate-200
+                  transition ease-in-out delay-150 hover:scale-105"
     >
-      <FcGoogle size={20} className="align-text-top" />
+      <FcGoogle className="align-text-top w-10 h-auto" />
       <span> Entrar com Google</span>
       <span></span>
     </p>
