@@ -12,8 +12,8 @@ const MobileNav = () => {
   const { data: session } = useSession();
 
   return (
-    <nav className="flex max-w-full mx-auto sm:p-2 justify-between items-center lg:hidden p-1 cursor-pointer bg-slate-200">
-      <div className="flex items-center transition ease-in-out delay-150 hover:scale-110">
+    <nav className="flex max-w-full mx-auto sm:p-1 justify-between items-center lg:hidden p-1 cursor-pointer bg-slate-200">
+      <div className="flex items-center">
         <h1 className=" font-semibold tracking-wider sm:text-lg z-[100]">
           <Link href="/home">
             <MdDeliveryDining className="w-12 h-12 fill-current text-red-600" />

@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import Loader from "../loading";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import { BsArrowRightCircleFill } from "react-icons/bs";
+import GoogleButton from "../GoogleButton";
 
 type Inputs = {
   email: string;
@@ -25,7 +26,6 @@ const Form = () => {
 
   const {
     register,
-    reset,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<Inputs>({
@@ -38,7 +38,9 @@ const Form = () => {
 
   const [message, setMessage] = useState<null | string>(null);
 
-  const formSubmit: SubmitHandler<Inputs> = async (form) => {
+  const formSubmit: SubmitHandler<Inputs> = async (form, e) => {
+    e!.preventDefault();
+
     const { fullName, email, password } = form;
 
     try {
@@ -67,79 +69,108 @@ const Form = () => {
       setMessage(err);
     }
 
-    reset();
+    e!.target.reset();
   };
 
   return (
     <form
       onSubmit={handleSubmit(formSubmit)}
       autoComplete="off"
-      className={`${styles.form_container} -mt-2 flex justify-center items-center flex-col`}
+      className={`${styles.form_container} flex justify-center items-center flex-col`}
     >
-      <fieldset className="w-full mx-4 flex justify-center items-center flex-col">
-        <div className="w-full px-2">
-          <label htmlFor="lastName" className="text-sm">
-            Nome
-          </label>
-          <input
-            {...register("fullName", {
-              required: "First Name is required",
-            })}
-            type="text"
-            autoComplete="false"
-            className="p-3 w-full border-solid border-[1px] border-[#EAECEF]"
-          />
-          {errors.fullName?.message && <small className="block text-red-600">{errors.fullName.message}</small>}
-        </div>
-        <div className="w-full px-2">
-          <label htmlFor="email" className="text-sm">
-            Email
-          </label>
-          <input
-            {...register("email", {
-              required: "Preencha o email",
-              pattern: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
-            })}
-            type="email"
-            autoComplete="off"
-            className="p-3 w-full border-solid border-[1px] border-[#EAECEF]"
-          />
-          {errors.email?.message && <small className="block text-red-600">{errors.email.message}</small>}
-        </div>
+      <h2 className={`leading-[1.15] mt-12 mx-auto w-full  px-2 text-xl my-6 sm:text-2xl font-semibold  font-Poppins`}>
+        Cadastro
+      </h2>
 
-        <div className="w-full px-2">
-          <label htmlFor="password" className="text-sm">
-            Senha
-          </label>
-          <input
-            type="password"
-            {...register("password", {
-              required: "Preencha a senha",
-              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/,
-            })}
-            autoComplete="new-password"
-            className="p-3 w-full border-solid border-[1px] border-[#EAECEF]"
-          />
-          {errors.password?.message && <small className="block text-red-600">{errors.password.message}</small>}
-        </div>
+      <fieldset className="w-full px-2 flex justify-center items-center flex-col">
+        <label className="w-full" htmlFor="username">
+          Nome
+        </label>
+        <input
+          {...register("fullName", {
+            required: "Preencha seu nome",
+          })}
+          placeholder="Seu nome"
+          type="text"
+          autoComplete="false"
+          className=" w-full   border-solid border border-slate-200 focus:ring focus:ring-slate-300 rounded-full"
+        />
+        {errors.fullName?.message && <small className="block text-red-600 w-full">{errors.fullName.message}</small>}
       </fieldset>
-      <div className="flex flex-col w-full items-center px-2">
-        <p className="w-full text-left">
-          <Link href="/login" className="text-lightColor hover:text-primaryColor hover:underline">
-            {" "}
-            Já tem uma conta? Fazer Login
-          </Link>
-        </p>
-        {message && <small className="block text-red-600">{message}</small>}
+
+      <fieldset className="w-full px-2 mt-5 flex justify-center items-center flex-col">
+        <label className="w-full" htmlFor="email">
+          Email
+        </label>
+        <input
+          {...register("email", {
+            required: "Preencha o email",
+            pattern: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+          })}
+          placeholder="email@exemplo.com"
+          type="email"
+          autoComplete="off"
+          className=" w-full   border-solid border border-slate-200 focus:ring focus:ring-slate-300 rounded-full"
+        />
+        {errors.email?.message && <small className="block text-red-600 w-full">{errors.email.message}</small>}
+      </fieldset>
+
+      <fieldset className="w-full px-2 mt-5 flex justify-center items-center flex-col">
+        <label className="w-full" htmlFor="password">
+          Senha
+        </label>
+        <input
+          {...register("password", {
+            required: "Preencha a senha",
+            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/,
+          })}
+          placeholder="***********"
+          type="password"
+          autoComplete="new-password"
+          className=" w-full   border-solid border border-slate-200 focus:ring focus:ring-slate-300 rounded-full"
+        />
+        {errors.password?.message && <small className="block text-red-600 w-full">{errors.password.message}</small>}
+      </fieldset>
+
+      <div className="flex flex-col justify-center w-full items-center px-2">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="text-center my-12 flex-1 w-full bg-green-700 hover:bg-white hover:text-green-700 hover:border-green-700 hover:border-[1px] hover:font-semibold rounded-md p-[1rem] px-4 mx-2  text-white cursor-pointer"
+          className="w-full group flex justify-center items-center text-center flex-1 mt-6 bg-green-700 text-white cursor-pointer rounded-md p-[1rem] px-4  
+                       transition ease-in-out delay-150 hover:scale-105 relative"
         >
-          Cadastrar
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            className={`${isSubmitting ? "animate-spin" : "hidden"} absolute left-10`}
+          >
+            <path
+              fill="white"
+              d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"
+            />
+          </svg>
+          <p className="transition ease-in-out delay-200 group-hover:scale-125">Cadastrar</p>
         </button>
+        <p className={`pt-6  text-slate-400 text-center ${styles.login_continue}`}>
+          <span className="mr-1 ">Ou</span>
+        </p>
       </div>
-      {isSubmitting && <Loader />}
+
+      <div className="flex w-full justify-center px-2 text-lg items-center transition ease-in-out delay-150 hover:scale-105">
+        <GoogleButton />
+      </div>
+
+      <div className="py-4 px-2 w-full">
+        <Link
+          href="/login"
+          className="group flex items-center text-lightColor w-full text-left hover:text-primaryColor hover:underline"
+        >
+          <p>Já tem uma conta? Fazer Login</p>
+          <BsArrowRightCircleFill className="ml-2 transition ease-in-out delay-150 group-hover:translate-x-2 group-hover:scale-150" />
+        </Link>
+      </div>
     </form>
   );
 };

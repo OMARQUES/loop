@@ -10,7 +10,12 @@
   a {
     -webkit-tap-highlight-color: transparent;
   }
+
+  * {
+    @apply select-none;
+  }
 }
+
 svg {
   @apply inline;
 }

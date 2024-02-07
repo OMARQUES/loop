@@ -8,7 +8,7 @@ const DesktopNav = () => {
   const { data: session } = useSession();
 
   return (
-    <nav className={`hidden px-6 lg:flex justify-between items-center py-2 bg-slate-200`}>
+    <nav className={`hidden px-6 lg:flex justify-between items-center py-1 bg-slate-200`}>
       <div className="flex items-center transition ease-in-out delay-150 hover:scale-125">
         <h1 className="text-2xl font-semibold">
           <Link href="/home">
@@ -22,25 +22,24 @@ const DesktopNav = () => {
           <>
             <p className="my-4 text-black  ">Signed in as {session.user?.email}</p>
             <p onClick={() => signOut()} className="bg-green-700 ml-6 my-4 rounded-md p-2 px-4 mx-2 text-white">
-              <BsPersonFill /> Logout
+              <BsPersonFill /> Sair
             </p>
           </>
         ) : (
           <>
-            {" "}
             <Link
-              className="border-[1px] mx-4 min-w-[168px] w-full text-center py-[10px] px-8 text-sm font-medium  border-solid rounded-[24px] border-green-700
-              hover:bg-green-700 hover:text-white transition ease-in-out delay-150 hover:scale-110"
+              className="group border mx-4 min-w-[168px] w-full text-center py-2 px-8 text-sm font-medium  border-solid rounded-full 
+              border-green-700 hover:bg-green-700  transition ease-in-out hover:scale-110"
               href="/login"
             >
-              <p>Entrar</p>
+              <p className="transition ease-in-out group-hover:scale-125 group-hover:text-white">Entrar</p>
             </Link>
             <Link
-              className="rounded-[24px] text-white font-medium text-sm shadow-button py-[10px] mx-4 min-w-[168px] w-full text-center bg-green-700
-              hover:bg-green-800  hover:border-green-700 transition ease-in-out delay-150 hover:scale-110"
+              className="group rounded-full text-white font-medium text-sm shadow-button py-2 mx-4 min-w-[168px] w-full text-center 
+              bg-green-700 hover:bg-green-800  hover:border-green-700 transition ease-in-out  hover:scale-110"
               href="/register"
             >
-              <p>Cadastrar</p>
+              <p className="transition ease-in-out group-hover:scale-125">Cadastrar</p>
             </Link>
           </>
         )}

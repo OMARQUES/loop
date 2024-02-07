@@ -1,16 +1,36 @@
 .form_container input,
 .form_container label {
-    @apply block my-1;
+  @apply block my-1;
 }
 
+.form_container input[type="email"],
+.form_container input[type="password"],
+.form_container input[type="text"] {
+  @apply p-3;
+}
 
+.login_continue::before,
+.login_continue::after {
+  content: "";
+  display: inline-block;
+  max-width: 170px;
+  width: calc(60% - 4em);
+  height: 2px;
+  background-color: #eaecef;
+  vertical-align: middle;
+  @apply mr-1;
+}
+
+.login_continue {
+  @apply w-full;
+}
 
 .form_container div {
-    @apply mt-8;
+  @apply mt-8;
 }
 
-@media(min-width: 640px) {
-    .form_container input {
-        min-width: 380px;
-    }
+@media (min-width: 640px) {
+  .form_container input {
+    min-width: 380px;
+  }
 }
