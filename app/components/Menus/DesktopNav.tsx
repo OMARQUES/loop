@@ -29,13 +29,15 @@ const DesktopNav = () => {
           <>
             {" "}
             <Link
-              className="border-[1px] hover:bg-green-700 hover:text-white mx-4 min-w-[168px] w-full text-center py-[10px] px-8 text-sm font-medium  border-solid rounded-[24px] border-green-700"
+              className="border-[1px] mx-4 min-w-[168px] w-full text-center py-[10px] px-8 text-sm font-medium  border-solid rounded-[24px] border-green-700
+              hover:bg-green-700 hover:text-white transition ease-in-out delay-150 hover:scale-110"
               href="/login"
             >
               <p>Entrar</p>
             </Link>
             <Link
-              className="rounded-[24px] hover:bg-white hover:border-2 hover:text-green-700 hover:border-green-700 text-white font-medium text-sm shadow-button py-[10px] mx-4 min-w-[168px] w-full text-center bg-green-700 "
+              className="rounded-[24px] text-white font-medium text-sm shadow-button py-[10px] mx-4 min-w-[168px] w-full text-center bg-green-700
+              hover:bg-green-800  hover:border-green-700 transition ease-in-out delay-150 hover:scale-110"
               href="/register"
             >
               <p>Cadastrar</p>
