@@ -21,17 +21,20 @@ export const POST = async (request: NextRequest) => {
 
     try {
       await newUser.save();
-      return new NextResponse("User has been created", {
+      return new NextResponse("Account has been created", {
         status: 201,
+        statusText: "Usuario criado com sucesso",
       });
     } catch (err: any) {
       return new NextResponse(err.message, {
         status: 500,
+        statusText: "Erro ao criar o usuario",
       });
     }
   } else {
-    return new NextResponse("Email já cadastrado", {
+    return new NextResponse("Email in use", {
       status: 501,
+      statusText: "Email em uso",
     });
   }
 };

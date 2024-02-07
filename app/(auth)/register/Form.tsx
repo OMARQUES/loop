@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Loader from "../loading";
 import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
 
 type Inputs = {
   email: string;
@@ -24,6 +25,7 @@ const Form = () => {
 
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<Inputs>({
@@ -52,13 +54,20 @@ const Form = () => {
         }),
       });
 
-      console.log(res);
+      console.log("cu");
+
+      if (res.status === 501) {
+        {
+          toast.error(res.statusText);
+        }
+      }
 
       res.status === 201 && router.push("/login?success=Account has been created");
-      res.status === 501 && router.push("/login?error=Email em uso");
     } catch (err: any) {
       setMessage(err);
     }
+
+    reset();
   };
 
   return (
@@ -105,7 +114,7 @@ const Form = () => {
           <input
             type="password"
             {...register("password", {
-              required: "Preecnha a senha",
+              required: "Preencha a senha",
               pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/,
             })}
             autoComplete="new-password"

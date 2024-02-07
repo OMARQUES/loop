@@ -9,6 +9,8 @@ import GoogleButton from "../GoogleButton";
 import Loader from "../loading";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import { error } from "console";
+import { ok } from "assert";
 
 type Inputs = {
   email: string;
@@ -21,6 +23,7 @@ const Form = () => {
 
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<Inputs>({
@@ -31,9 +34,14 @@ const Form = () => {
   });
 
   useEffect(() => {
+    console.log(searchParams.get("success"));
+
     if (searchParams.get("error") === "OAuthAccountNotLinked") {
       toast.error("Email já está vinculado a outra conta");
-      router.push("/login");
+      router.replace("/login");
+    }
+    if (searchParams.get("success") === "Account has been created") {
+      toast.success("Usuario criado com sucesso");
     }
   }, []);
 
@@ -46,8 +54,13 @@ const Form = () => {
     });
 
     console.log(res?.error);
-
-    toast.error(JSON.stringify(res?.error, Object.getOwnPropertyNames(res?.error)));
+    if (res?.error === "Error: Email ou senha incorretos") {
+      toast.error("Email ou senha incorretos");
+    }
+    if (res?.ok) {
+      router.replace("/home");
+    }
+    reset();
   };
 
   return (
