@@ -40,7 +40,7 @@ const Form = () => {
     if (searchParams.get("success") === "Account has been created") {
       toast.success("Usuario criado com sucesso");
     }
-  }, []);
+  }, [searchParams, router]);
 
   const formSubmit: SubmitHandler<Inputs> = async (form, e) => {
     e!.preventDefault();
