@@ -161,13 +161,6 @@ const Form = () => {
           </svg>
           <p className="transition ease-in-out delay-200 group-hover:scale-125">Cadastrar</p>
         </button>
-        <p className={`pt-6  text-slate-400 text-center ${styles.login_continue}`}>
-          <span className="mr-1 ">Ou</span>
-        </p>
-      </div>
-
-      <div className="flex w-full justify-center px-2 text-lg items-center transition ease-in-out delay-150 hover:scale-105">
-        <GoogleButton />
       </div>
 
       <div className="py-4 px-2 w-full">
