@@ -9,11 +9,22 @@ import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { BsArrowRightCircleFill } from "react-icons/bs";
 import GoogleButton from "../GoogleButton";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { log } from "console";
 
 type Inputs = {
   email: string;
   fullName: string;
   password: string;
+};
+
+const errorMessages = {
+  required: "Preencha esse campo",
+  email: "Email invalido",
+  passwordMinLength: "Senha deve ter no minimo 8 caracteres",
+  passwordMaxLength: "Senha deve ter até 32 caracteres",
+  passwordPattern: "A senha deve letras minusculas, maiusculas, numeros e caracter especial",
 };
 
 const Form = () => {
@@ -24,19 +35,30 @@ const Form = () => {
     router?.push("/home");
   }
 
+  const schema = z.object({
+    email: z.string().min(1, { message: errorMessages.required }).email({ message: errorMessages.email }),
+    fullName: z.string().min(1, { message: errorMessages.required }),
+    password: z
+      .string()
+      .min(8, { message: errorMessages.passwordMinLength })
+      .max(32, { message: errorMessages.passwordMaxLength })
+      .regex(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,16}$/, {
+        message: "A senha deve conter letras minusculas, maiusculas, numeros e caracter especial",
+      }),
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<Inputs>({
+    resolver: zodResolver(schema),
     defaultValues: {
       email: "",
       fullName: "",
       password: "",
     },
   });
-
-  const [message, setMessage] = useState<null | string>(null);
 
   const formSubmit: SubmitHandler<Inputs> = async (form, e) => {
     const { fullName, email, password } = form;
@@ -62,7 +84,7 @@ const Form = () => {
 
       res.status === 201 && router.push("/login?success=Account has been created");
     } catch (err: any) {
-      setMessage(err);
+      throw new Error(err);
     }
   };
 
@@ -81,9 +103,7 @@ const Form = () => {
           Nome
         </label>
         <input
-          {...register("fullName", {
-            required: "Preencha seu nome",
-          })}
+          {...register("fullName")}
           placeholder="Seu nome"
           type="text"
           autoComplete="false"
@@ -97,10 +117,7 @@ const Form = () => {
           Email
         </label>
         <input
-          {...register("email", {
-            required: "Preencha o email",
-            pattern: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
-          })}
+          {...register("email")}
           placeholder="email@exemplo.com"
           type="email"
           autoComplete="off"
@@ -114,10 +131,7 @@ const Form = () => {
           Senha
         </label>
         <input
-          {...register("password", {
-            required: "Preencha a senha",
-            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/,
-          })}
+          {...register("password")}
           placeholder="***********"
           type="password"
           autoComplete="new-password"
